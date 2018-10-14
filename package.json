@@ -1,0 +1,58 @@
+{
+  "name": "node-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint src/js",
+    "start": "node bin/server.js",
+    "dev": "nodemon bin/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Anton Salman",
+    "email": "anton.salman@gmail.com",
+    "url": "http://isuportec.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "express-cluster": "0.0.5",
+    "express-session": "^1.15.6",
+    "express-winston": "^3.0.0",
+    "helmet": "^3.14.0",
+    "joi": "^13.7.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.3",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "nodemailer": "^4.6.8",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3",
+    "rxjs": "^6.3.3",
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.1.0",
+    "winston-loggly-bulk": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-polyfill": "^6.26.0",
+    "eslint": "^5.7.0",
+    "eslint-plugin-babel": "^5.2.1",
+    "eslint-plugin-react": "^7.11.1",
+    "nodemon": "^1.18.4"
+  }
+}
