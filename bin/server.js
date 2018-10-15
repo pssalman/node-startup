@@ -1,4 +1,5 @@
 // Dependencies
+const cluster = require('cluster');
 const app = require("../app");
 const debug = require("debug")("app:server");
 const fs = require('fs');
@@ -9,6 +10,8 @@ const helmet = require("helmet");
 const logger = require('../config/logger/index');
 const dotenv = require('dotenv');
 const mail = require('../config/mail/index');
+const numCPUs = require('os').cpus().length;
+const mongoose = require('mongoose');
 
 dotenv.config();
 
@@ -100,4 +103,26 @@ httpsServer.on("error", onError);
 httpsServer.on("listening", onHTTPSListening);
 httpsServer.listen(httpsPort, () => {
 	logger.log('info', `HTTPS Server running on port ${httpsPort}`);
+});
+
+process.on('uncaughtException', (e) => {
+  debug('process.onUncaughException: %o', e);
+  process.exit(1);
+});
+
+process.on('warning', (warning) => {
+  debug('process.onWarning: %o', warning);
+});
+
+process.on('SIGTERM', () => {
+  logger.log('error', 'SIGTERM signal received.');
+  logger.log('error', 'Closing https server.');
+  httpsServer.close(() => {
+    logger.log('error', 'Https server closed.');
+    // boolean means [force], see in mongoose doc
+    mongoose.connection.close(false, () => {
+      logger.log('error', 'MongoDb connection closed.');
+      process.exit(0);
+    });
+  });
 });
