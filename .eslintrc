@@ -1,1 +1,6 @@
-{ "extends" : "equimper" }
+{ 
+  "extends" : [
+    "equimper",
+    "prettier",
+  ]
+}
