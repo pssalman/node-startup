@@ -48,11 +48,17 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
     "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^5.7.0",
+    "eslint-config-equimper": "^2.2.2",
     "eslint-plugin-babel": "^5.2.1",
     "eslint-plugin-react": "^7.11.1",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "webpack": "^4.20.2",
+    "webpack-node-externals": "^1.7.2"
   }
 }
