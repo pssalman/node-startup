@@ -1,5 +1,6 @@
 node_modules/
 logs/
+sessions/
 ssl/
 .env
 package-lock.json

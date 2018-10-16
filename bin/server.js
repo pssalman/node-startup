@@ -11,21 +11,18 @@ const logger = require('../config/logger/index');
 const dotenv = require('dotenv');
 // const mail = require('../config/mail/index');
 // const numCPUs = require('os').cpus().length;
-const mongoose = require('../config/db/index');
+const Mongoose = require('../config/db/index');
 
 dotenv.config();
 
 debug('Starting HTTP and HTTPS Servers');
-// Certificate
-// const privateKey = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/cert.pem', 'utf8');
-// const ca = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/chain.pem', 'utf8');
 
 app.use(helmet()); // Add Helmet as a middleware
-
+// Certificates
 const privateKey = fs.readFileSync('ssl/localhost-privkey.pem', 'utf8');
 const certificate = fs.readFileSync('ssl/localhost-cert.pem', 'utf8');
 const dhparamKey = fs.readFileSync('ssl/dh-strong.pem', 'utf8');
+// const ca = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/chain.pem', 'utf8');
 
 const credentials = {
   key: privateKey,
@@ -142,7 +139,7 @@ let gracefulExit = () => {
     logger.log('warn', 'Https server closed.');
     httpServer.close(() => {
       logger.log('warn', 'Http server closed.');
-      mongoose._connection().close(() => {
+      Mongoose._connection().close(() => {
         logger.log('warn', 'Mongoose connection with DB is disconnected through app termination');
         process.exit(0);
       });
