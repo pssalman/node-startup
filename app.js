@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
@@ -19,6 +19,7 @@ const expressWinston = require('express-winston');
 const uuidv4 = require('uuid/v4');
 const FileStore = require('session-file-store')(session);
 const indexRoute = require('./routes/home/index');
+const userRoute = require('./routes/users/index');
 
 debug('Load My App');
 // Load environment variables from .env
@@ -62,7 +63,10 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // enable cookie-parser on app
-// app.use(cookieParser());
+app.use(cookieParser());
+// Enable static files serving and favicon
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 // enable express-session on app
 app.use(session({
   name: 'api_server_cookie',
@@ -81,14 +85,11 @@ app.use(session({
       autoRemoveInterval: 10, // In minutes. Default - Remove this in production env
     }
   ), // new FileStore(),
-  secret: app.locals.sessionID,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: { path: '/', httpOnly: true, secure: true, maxAge: 365 * 24 * 60 * 60 * 1000 }
 }));
-// Enable static files serving and favicon
-app.use('/assets', express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 // Enable Access Log on Requests
 app.use(expressWinston.logger({
   transports: [
@@ -108,6 +109,7 @@ app.use(expressWinston.logger({
 }));
 // Setup app routes
 app.use('', indexRoute);
+app.use('/api/v1/accounts', userRoute);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -123,6 +125,11 @@ app.use((err, req, res, next) => {
     message: err.message,
     error: err,
   });
+  // res.json({
+  //   error: {
+  //     message: err.message,
+  //   }
+  // });
 });
 // Enable Error Access Logs on app
 app.use(expressWinston.errorLogger({

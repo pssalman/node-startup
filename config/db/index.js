@@ -20,7 +20,7 @@ class Database {
   _connect() {
     mongoose
       .connect(
-        dbURL, { useNewUrlParser: true }
+        dbURL, { useNewUrlParser: true, useCreateIndex: true }
       )
       .then(() => {
         logger.log(
@@ -44,6 +44,7 @@ class Database {
           logger.log('error', err.message, { error: err });
         }
       });
+     // mongoose.set('useCreateIndex', true);
   }
   _connection () {
     return mongoose.connection;
