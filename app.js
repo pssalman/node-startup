@@ -59,7 +59,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(expressWinston.logger({
@@ -79,7 +79,7 @@ app.use(expressWinston.logger({
   ignoreRoute: (req, res) => { return false; }, // optional: allows to skip some log messages based on request and/or response
 }));
 
-app.use('/', indexRoute);
+app.use('', indexRoute);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -89,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // If our application encounters an error, we'll display the error and stack trace accordingly.
-app.use('*', (err, req, res, next) => {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -107,7 +107,6 @@ app.use(expressWinston.errorLogger({
       filename: path.join(__dirname, 'logs', 'access-error.log'),
     }),
   ],
-})
-);
+}));
 
 module.exports = app;
