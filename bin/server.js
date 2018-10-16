@@ -11,7 +11,7 @@ const logger = require('../config/logger/index');
 const dotenv = require('dotenv');
 // const mail = require('../config/mail/index');
 // const numCPUs = require('os').cpus().length;
-const mongoose = require('mongoose');
+const mongoose = require('../config/db/index');
 
 dotenv.config();
 
@@ -50,12 +50,32 @@ const normalizePort = val => {
   return false;
 };
 
-const onError = error => {
+const onHTTPError = error => {
   if (error.syscall !== 'listen') {
     throw error;
   }
   const httpAddr = httpServer.address();
   const bind = typeof httpAddr === 'string' ? `pipe ${httpAddr}` : `port ${httpPort}`;
+  switch (error.code) {
+    case 'EACCES':
+      logger.log('error', `${bind} requires elevated privileges`);
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      logger.log('error', `${bind} is already in use`);
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
+
+const onHTTPSError = error => {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+  const httpsAddr = httpsServer.address();
+  const bind = typeof httpsAddr === 'string' ? `pipe ${httpsAddr}` : `port ${httpsPort}`;
   switch (error.code) {
     case 'EACCES':
       logger.log('error', `${bind} requires elevated privileges`);
@@ -87,20 +107,20 @@ const httpsPort = normalizePort(process.env.HTTPS_PORT || '3443');
 app.set('httpPort', httpPort);
 app.set('httpsPort', httpsPort);
 
-app.use((req, res) => {
-  res.send('Hello there !');
-});
+// app.use((req, res) => {
+//   res.send('Hello there !');
+// });
 
 // Starting both http & https servers
 const httpServer = http.createServer(app);
-httpServer.on('error', onError);
+httpServer.on('error', onHTTPError);
 httpServer.on('listening', onHTTPListening);
 httpServer.listen(httpPort, () => {
   logger.log('info', `HTTP Server running on port ${httpPort}`);
 });
 
 const httpsServer = https.createServer(credentials, app);
-httpsServer.on('error', onError);
+httpsServer.on('error', onHTTPSError);
 httpsServer.on('listening', onHTTPSListening);
 httpsServer.listen(httpsPort, () => {
   logger.log('info', `HTTPS Server running on port ${httpsPort}`);
@@ -115,15 +135,19 @@ process.on('warning', (warning) => {
   debug('process.onWarning: %o', warning);
 });
 
-process.on('SIGTERM', () => {
-  logger.log('error', 'SIGTERM signal received.');
-  logger.log('error', 'Closing https server.');
+let gracefulExit = () => {
+  debug('Connections termination signal was received');
+  logger.log('error', 'Closing all active connections.');
   httpsServer.close(() => {
-    logger.log('error', 'Https server closed.');
-    // boolean means [force], see in mongoose doc
-    mongoose.connection.close(false, () => {
-      logger.log('error', 'MongoDb connection closed.');
-      process.exit(0);
+    logger.log('warn', 'Https server closed.');
+    httpServer.close(() => {
+      logger.log('warn', 'Http server closed.');
+      mongoose._connection().close(() => {
+        logger.log('warn', 'Mongoose connection with DB is disconnected through app termination');
+        process.exit(0);
+      });
     });
   });
-});
+}
+// If the Node process ends, close the http server connection
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);

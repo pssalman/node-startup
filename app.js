@@ -11,9 +11,10 @@ const debug = require('debug')('app:namespace');
 const compression = require('compression');
 const dotenv = require('dotenv');
 const logger = require('./config/logger/index');
-const db = require('./config/db/index');
+const database = require('./config/db/index');
 const winston = require('winston');
 const expressWinston = require('express-winston');
+const indexRoute = require('./routes/home/index');
 
 debug('Load My App');
 
@@ -78,6 +79,8 @@ app.use(expressWinston.logger({
   ignoreRoute: (req, res) => { return false; }, // optional: allows to skip some log messages based on request and/or response
 }));
 
+app.use('/', indexRoute);
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Resource Not Found');
@@ -86,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // If our application encounters an error, we'll display the error and stack trace accordingly.
-app.use((err, req, res, next) => {
+app.use('*', (err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

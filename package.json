@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint config/db/index.js",
     "start": "node bin/server.js",
     "dev": "nodemon bin/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -31,7 +31,7 @@
     "helmet": "^3.14.0",
     "joi": "^13.7.0",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.3.3",
+    "mongoose": "^5.3.4",
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
     "nodemailer": "^4.6.8",
@@ -55,6 +55,7 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.7.0",
     "eslint-config-equimper": "^2.2.2",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-babel": "^5.2.1",
     "eslint-plugin-react": "^7.11.1",
     "nodemon": "^1.18.4",
