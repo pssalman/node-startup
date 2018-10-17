@@ -17,7 +17,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
@@ -33,6 +32,7 @@
     "joi": "^13.7.0",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.4",
+    "mongoose-timestamp": "^0.6.0",
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
     "nodemailer": "^4.6.8",
