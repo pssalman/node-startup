@@ -18,9 +18,13 @@ const UserSchema = new mongoose.Schema({
         last_name: { type: String, trim: true },
     },
     password: { type: String, required: true, },
-}, { collection: 'users' });
+}, { 
+    collection: 'users',
+    timestamps: true,
+    collation: { locale: 'en_US', strength: 1 } // will ignore case matches
+});
 
-UserSchema.plugin(timestamps);
+// UserSchema.plugin(timestamps);
 UserSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', UserSchema);

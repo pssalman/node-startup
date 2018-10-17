@@ -43,6 +43,7 @@ class Database {
           );
           logger.log('error', err.message, { error: err });
         }
+        process.exit();
       });
      // mongoose.set('useCreateIndex', true);
   }

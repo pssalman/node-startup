@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../../models/users/index');
 const logger = require('../../config/logger/index');
 
+const saltRounds = 10;
+
 exports.signUp = (req, res, next) => {
     User.find({$or:[{ email: req.body.email }, { username: req.body.username }]})
       .exec()

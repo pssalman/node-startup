@@ -29,7 +29,7 @@ const app = express();
 // Create App instance SessionID
 app.locals.sessionID = crypto.randomBytes(32).toString('base64');
 logger.log('info', app.locals.sessionID);
-logger.log('info', `Namespace is running in ${app.get('env')} environment)`);
+logger.log('info', `Namespace is running in ${app.get('env')} environment`);
 
 debug(`Namespace is running in ${app.get('env')} environment)`);
 // Setup app to use morgan and helmet
